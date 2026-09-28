@@ -36,7 +36,12 @@ function recupererDonnees(type_recherche, mot_cle) {
         }
     });
 
-    xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?genres=${mot_cle}&sortBy=ranking&sortOrder=asc`);
+    if(type_recherche === "genre") {
+        xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?genres=${mot_cle}&sortBy=ranking&sortOrder=asc`);
+    }
+    else{
+        xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?search=${mot_cle}&sortBy=ranking&sortOrder=asc`);
+    }
     xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
 
