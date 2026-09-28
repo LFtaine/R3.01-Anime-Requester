@@ -8,9 +8,8 @@ let resultat;
 function traiterFormulaire(event) {
     event.preventDefault();
 
-
     type_recherche = document.getElementById("type_recherche").value;
-    mot_cle = document.getElementById("mot_cle").value;
+    mot_cle = document.getElementById("mot_cle").value.trim();
     console.log("Type de recherche sélectionné : " + type_recherche);
     console.log("Mot clé saisi : " + mot_cle);
 
@@ -20,32 +19,43 @@ function traiterFormulaire(event) {
     }
 
     recupererDonnees(type_recherche, mot_cle);
-
-    
 }
-
 
 function recupererDonnees(type_recherche, mot_cle) {
     const xhr = new XMLHttpRequest();
 
     xhr.addEventListener('readystatechange', function () {
         if (this.readyState === this.DONE) {
-            resultat=JSON.parse(this.responseText);
+            console.log("Statut :", this.status);
+            console.log("Réponse brute :", this.responseText);
+
+            try {
+                resultat = JSON.parse(this.responseText);
+            } catch (e) {
+                console.error("Réponse non JSON :", e);
+                return;
+            }
             console.log("Résultat de la requête : ", resultat);
         }
     });
 
-    if(type_recherche === "recherche_genre") {
-        xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?page=1&size=10&genres=${mot_cle}&sortBy=ranking&sortOrder=asc`);
+    let url;
+    if (type_recherche === "recherche_genre") {
+        mot_cle = mot_cle.charAt(0).toUpperCase() + mot_cle.slice(1).toLowerCase();
+        url = `https://anime-db.p.rapidapi.com/anime?page=1&size=10&genres=${encodeURIComponent(mot_cle)}&sortBy=ranking&sortOrder=asc`;
     }
-    else{
-        xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${mot_cle}&sortBy=ranking&sortOrder=asc`);
+    else if (type_recherche === "recherche_titre") {
+        url = `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${encodeURIComponent(mot_cle)}&sortBy=ranking&sortOrder=asc`;
     }
+    else {
+        console.error("Type de recherche inconnu :", type_recherche);
+        return;
+    }
+
+    console.log("URL :", url);
+    xhr.open('GET', url);
     xhr.setRequestHeader('x-rapidapi-key', '9e5903b096mshc6296e5f055eb5bp152ce7jsn26bd612daa06');
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
 
     xhr.send();
-
-    
-
 }
