@@ -3,6 +3,7 @@ formulaire.addEventListener("submit", traiterFormulaire);
 
 let type_recherche;
 let mot_cle;
+let resultat;
 
 function traiterFormulaire(event) {
     event.preventDefault();
@@ -29,7 +30,8 @@ function recupererDonnees(type_recherche, mot_cle) {
 
     xhr.addEventListener('readystatechange', function () {
         if (this.readyState === this.DONE) {
-            console.log(this.responseText);
+            resultat=JSON.parse(this.responseText);
+            console.log("Résultat de la requête : ", resultat);
         }
     });
 
@@ -39,9 +41,11 @@ function recupererDonnees(type_recherche, mot_cle) {
     else{
         xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${mot_cle}&sortBy=ranking&sortOrder=asc`);
     }
-    xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
+    xhr.setRequestHeader('x-rapidapi-key', '9e5903b096mshc6296e5f055eb5bp152ce7jsn26bd612daa06');
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
 
     xhr.send();
+
+    
 
 }
