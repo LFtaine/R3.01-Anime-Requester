@@ -14,6 +14,19 @@
             <h1>ANIME REQUESTER</h1>
         </header>
         <main>
+            <form id="formulaire"  method="post" >
+                Type de recherche :
+                <select name="type_recherche" id="type_recherche">
+                    <option value="recherche_titre">Recherche par titre</option>
+                    <option value="recherche_genre">Recherche par genre</option>
+                </select>
+                <br>
+                Mot clé :
+                <input type="text" name="mot_cle" id="mot_cle">
+                <button type="submit">Rechercher</button>
+                <button type="reset">Effacer</button>
+            </form>
+            <div id="resultats"></div>
             
             
         </main>
