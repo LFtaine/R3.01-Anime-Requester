@@ -25,5 +25,21 @@ function traiterFormulaire(event) {
 
 
 function recupererDonnees(type_recherche, mot_cle) {
+    const data = null;
+
+    const xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener('readystatechange', function () {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+        }
+    });
+
+    xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?genres=${mot_cle}&sortBy=ranking&sortOrder=asc`);
+    xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
+    xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
+
+    xhr.send(data);
 
 }
