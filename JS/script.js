@@ -1,4 +1,4 @@
-﻿let formulaire = document.getElementById("formulaire");
+let formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
 
 let type_recherche;
@@ -36,6 +36,7 @@ function recupererDonnees(type_recherche, mot_cle) {
                 return;
             }
             console.log("Résultat de la requête : ", resultat);
+            afficherResultats(resultat);
         }
     });
 
@@ -58,4 +59,38 @@ function recupererDonnees(type_recherche, mot_cle) {
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
 
     xhr.send();
+}
+
+function afficherMessage(message) {
+    const conteneur = document.getElementById("resultats");
+    conteneur.innerHTML = `<p>${message}</p>`;
+}
+
+function afficherResultats(resultat) {
+    const conteneur = document.getElementById("resultats");
+    conteneur.innerHTML = "";
+
+    if (!resultat || !resultat.data || resultat.data.length === 0) {
+        afficherMessage("Aucun anime trouvé.");
+        return;
+    }
+
+    resultat.data.forEach(anime => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const genres = Array.isArray(anime.genres) ? anime.genres.join(", ") : anime.genres;
+
+        card.innerHTML = `
+            <img src="${anime.image}" alt="${anime.title}">
+            <h3>${anime.title}</h3>
+            <p><strong>Genres :</strong> ${genres}</p>
+            <p><strong>Épisodes :</strong> ${anime.episodes || "Inconnu"}</p>
+            <p><strong>Rang :</strong> ${anime.ranking || "N/A"}</p>
+            <p><strong>Synopsis :</strong> ${anime.synopsis || "Aucun synopsis disponible."}</p>
+            ${anime.link ? `<a href="${anime.link}" target="_blank">Voir sur MyAnimeList</a>` : ""}
+        `;
+
+        conteneur.appendChild(card);
+    });
 }
