@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="author" content="fontain242">
-        <link rel="icon" type="image/x-icon" href="favicon.png">
-        <title>ANIME REQUESTER</title>
-        <script src="JS/script.js" defer></script>
-        <link rel="stylesheet" href="CSS/style.css">
-    </head>
-    <body>
-        <header>
-            <h1>ANIME REQUESTER</h1>
-        </header>
-        <main>
-            <form id="formulaire"  method="post" >
-                Type de recherche :
-                <select name="type_recherche" id="type_recherche">
-                    <option value="recherche_titre">Recherche par titre</option>
-                    <option value="recherche_genre">Recherche par genre</option>
-                </select>
-                <br>
-                Mot clé :
-                <input type="text" name="mot_cle" id="mot_cle">
-                <button type="submit">Rechercher</button>
-                <button type="reset">Effacer</button>
-            </form>
-            <div id="resultats"></div>
-            
-            
-        </main>
-        <footer>
-            <p>Réalisé par Louis Fontaine</p>
-        </footer>
-    </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="fontain242">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <title>ANIME REQUESTER</title>
+    <script src="JS/script.js" defer></script>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>ANIME REQUESTER</h1>
+    </header>
+    <main>
+        <form id="formulaire" method="post">
+            Type de recherche :
+            <select name="type_recherche" id="type_recherche">
+                <option value="recherche_titre">Recherche par titre</option>
+                <option value="recherche_genre">Recherche par genre</option>
+            </select>
+            <br>
+            Mot clé :
+            <input type="text" name="mot_cle" id="mot_cle">
+            <button type="submit">Rechercher</button>
+            <button type="reset">Effacer</button>
+        </form>
+        <div id="resultats"></div>
+
+
+    </main>
+    <footer>
+        <p>Réalisé par Louis Fontaine</p>
+    </footer>
+</body>
+
 </html>

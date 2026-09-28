@@ -1,4 +1,4 @@
-﻿let formulaire = document.getElementById("formulaire");
+let formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
 
 let type_recherche;
@@ -21,7 +21,7 @@ function traiterFormulaire(event) {
 
     recupererDonnees(type_recherche, mot_cle);
 
-    
+
 }
 
 
@@ -30,15 +30,16 @@ function recupererDonnees(type_recherche, mot_cle) {
 
     xhr.addEventListener('readystatechange', function () {
         if (this.readyState === this.DONE) {
-            resultat=JSON.parse(this.responseText);
+            resultat = JSON.parse(this.responseText);
             console.log("Résultat de la requête : ", resultat);
+            afficherResultats(resultat);
         }
     });
 
-    if(type_recherche === "recherche_genre") {
+    if (type_recherche === "recherche_genre") {
         xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?page=1&size=10&genres=${mot_cle}&sortBy=ranking&sortOrder=asc`);
     }
-    else{
+    else {
         xhr.open('GET', `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${mot_cle}&sortBy=ranking&sortOrder=asc`);
     }
     xhr.setRequestHeader('x-rapidapi-key', '9e5903b096mshc6296e5f055eb5bp152ce7jsn26bd612daa06');
@@ -46,6 +47,40 @@ function recupererDonnees(type_recherche, mot_cle) {
 
     xhr.send();
 
-    
 
+
+}
+
+function afficherMessage(message) {
+    const conteneur = document.getElementById("resultats");
+    conteneur.innerHTML = `<p>${message}</p>`;
+}
+
+function afficherResultats(resultat) {
+    const conteneur = document.getElementById("resultats");
+    conteneur.innerHTML = "";
+
+    if (!resultat || !resultat.data || resultat.data.length === 0) {
+        afficherMessage("Aucun anime trouvé.");
+        return;
+    }
+
+    resultat.data.forEach(anime => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const genres = Array.isArray(anime.genres) ? anime.genres.join(", ") : anime.genres;
+
+        card.innerHTML = `
+            <img src="${anime.image}" alt="${anime.title}">
+            <h3>${anime.title}</h3>
+            <p><strong>Genres :</strong> ${genres}</p>
+            <p><strong>Épisodes :</strong> ${anime.episodes || "Inconnu"}</p>
+            <p><strong>Rang :</strong> ${anime.ranking || "N/A"}</p>
+            <p><strong>Synopsis :</strong> ${anime.synopsis || "Aucun synopsis disponible."}</p>
+            ${anime.link ? `<a href="${anime.link}" target="_blank">Voir sur MyAnimeList</a>` : ""}
+        `;
+
+        conteneur.appendChild(card);
+    });
 }
