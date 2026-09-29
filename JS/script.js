@@ -55,7 +55,7 @@ function recupererDonnees(type_recherche, mot_cle) {
 
     console.log("URL :", url);
     xhr.open('GET', url);
-    xhr.setRequestHeader('x-rapidapi-key', '9e5903b096mshc6296e5f055eb5bp152ce7jsn26bd612daa06');
+    xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
 
     xhr.send();

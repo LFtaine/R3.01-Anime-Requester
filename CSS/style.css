@@ -19,12 +19,14 @@
 
 html {
     scroll-behavior: smooth;
+    background-color: var(--paper);
 }
 
 body {
     margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
+    background-color: var(--paper);
     color: var(--ink);
     font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px;
@@ -34,18 +36,18 @@ body {
 }
 
 .bg-slideshow {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
-    left: 50%;
+    left: 0;
     width: 100vw;
-    transform: translateX(-50%);
-    z-index: -1;
+    z-index: 0;
     overflow: hidden;
     background-color: var(--paper);
     display: flex;
     align-items: center;
     padding: 2.5rem 0;
+    pointer-events: none;
 }
 
 .bg-track {
@@ -78,6 +80,8 @@ body {
 }
 
 header {
+    position: relative;
+    z-index: 2;
     border-bottom: 3px solid var(--line);
     padding: 2.75rem 1.5rem 2.25rem;
     text-align: center;
@@ -106,6 +110,8 @@ main {
 }
 
 #formulaire {
+    position: relative;
+    z-index: 1;
     margin-top: 3rem;
     background: rgba(251, 248, 242, 0.82);
     backdrop-filter: blur(6px);
@@ -208,26 +214,43 @@ main {
 }
 
 #resultats {
+    position: relative;
+    z-index: 1;
     margin-top: 2.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
 }
 
-#resultats .resultat {
-    background: var(--paper-raised);
+#resultats > p {
+    background: rgba(251, 248, 242, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 2px dashed var(--line);
+    box-shadow: 5px 5px 0 var(--ink);
+    padding: 1.25rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+}
+
+#resultats .resultat,
+#resultats .card {
+    background: rgba(251, 248, 242, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 2px solid var(--line);
     border-left: 6px solid var(--accent);
     box-shadow: 5px 5px 0 var(--ink);
-    padding: 1rem 1.25rem;
+    padding: 1.25rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-#resultats .resultat:nth-child(3n+2) {
-    border-left-color: var(--accent-2);
-}
-
-#resultats .resultat:nth-child(3n+3) {
-    border-left-color: var(--accent-3);
+#resultats .resultat:hover,
+#resultats .card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--ink);
 }
 
 #resultats .resultat h2 {
@@ -244,7 +267,105 @@ main {
     font-size: 0.9rem;
 }
 
+#resultats .card {
+    display: grid;
+    grid-template-columns: 115px 1fr;
+    column-gap: 1.25rem;
+    row-gap: 0.35rem;
+    align-items: start;
+}
+
+#resultats .card img {
+    grid-column: 1;
+    grid-row: 1 / span 6;
+    width: 115px;
+    height: 170px;
+    object-fit: cover;
+    display: block;
+    border: 2px solid var(--line);
+    box-shadow: 3px 3px 0 var(--ink);
+    background: var(--paper-dark);
+}
+
+#resultats .card h3 {
+    grid-column: 2;
+    margin: 0 0 0.25rem;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+}
+
+#resultats .card p {
+    grid-column: 2;
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+#resultats .card p strong {
+    color: var(--ink);
+}
+
+#resultats .card p:last-of-type {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.25rem;
+}
+
+#resultats .card a {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0.5rem;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--accent-ink);
+    background: var(--accent-2);
+    border: 2px solid var(--line);
+    padding: 0.45rem 0.9rem;
+    text-decoration: none;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+#resultats .card a:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--ink);
+    background: var(--accent);
+}
+
+@media (max-width: 520px) {
+    #resultats .card {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    #resultats .card img {
+        grid-column: 1;
+        grid-row: auto;
+        width: 130px;
+        height: 185px;
+        margin-bottom: 0.5rem;
+    }
+
+    #resultats .card h3,
+    #resultats .card p,
+    #resultats .card a {
+        grid-column: 1;
+        justify-self: center;
+    }
+}
+
 footer {
+    position: relative;
+    z-index: 2;
     border-top: 4px solid var(--line);
     padding: 1.25rem 1.5rem;
     text-align: center;
