@@ -24,6 +24,7 @@ html {
 body {
     margin: 0;
     min-height: 100vh;
+    overflow-x: hidden;
     color: var(--ink);
     font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px;
@@ -32,58 +33,49 @@ body {
     flex-direction: column;
 }
 
-/* ---------- Diaporama de fond ---------- */
-/* 10 emplacements prêts (bg-slide 1 à 10), un toutes les 6s sur un cycle de 60s.
-   Pour ajouter une image : ajoute un <div class="bg-slide"> dans le HTML,
-   il prendra automatiquement le prochain créneau libre. Au-delà de 10 images,
-   duplique le dernier bloc nth-child ci-dessous en ajoutant 6s de délai. */
-
 .bg-slideshow {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
     z-index: -1;
     overflow: hidden;
     background-color: var(--paper);
+    display: flex;
+    align-items: center;
+    padding: 2.5rem 0;
+}
+
+.bg-track {
+    display: flex;
+    height: 100%;
+    width: max-content;
+    animation: bgScroll 280s linear infinite;
 }
 
 .bg-slide {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
+    flex: none;
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: none;
     filter: grayscale(1) contrast(1.1);
     mix-blend-mode: multiply;
-    opacity: 0;
-    animation: bgCycle 60s infinite;
+    margin-right: 0.75rem;
 }
 
-.bg-slide:nth-child(1)  { animation-delay: 0s; }
-.bg-slide:nth-child(2)  { animation-delay: 6s; }
-.bg-slide:nth-child(3)  { animation-delay: 12s; }
-.bg-slide:nth-child(4)  { animation-delay: 18s; }
-.bg-slide:nth-child(5)  { animation-delay: 24s; }
-.bg-slide:nth-child(6)  { animation-delay: 30s; }
-.bg-slide:nth-child(7)  { animation-delay: 36s; }
-.bg-slide:nth-child(8)  { animation-delay: 42s; }
-.bg-slide:nth-child(9)  { animation-delay: 48s; }
-.bg-slide:nth-child(10) { animation-delay: 54s; }
-
-@keyframes bgCycle {
-    0%   { opacity: 0; }
-    1%   { opacity: 1; }
-    8%   { opacity: 1; }
-    10%  { opacity: 0; }
-    100% { opacity: 0; }
+@keyframes bgScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .bg-slide {
+    .bg-track {
         animation: none;
-        opacity: 0.15;
     }
 }
-
-/* ---------- Header ---------- */
 
 header {
     border-bottom: 3px solid var(--line);
@@ -104,9 +96,8 @@ header h1 {
     border-bottom: 3px solid var(--accent);
 }
 
-/* ---------- Main / layout ---------- */
-
 main {
+    position: relative;
     flex: 1;
     width: 100%;
     max-width: 640px;
@@ -114,10 +105,11 @@ main {
     padding: 2.5rem 1.5rem 4rem;
 }
 
-/* ---------- Form panel ---------- */
-
 #formulaire {
-    background: var(--paper-raised);
+    margin-top: 3rem;
+    background: rgba(251, 248, 242, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 3px solid var(--line);
     box-shadow: 8px 8px 0 var(--ink);
     padding: 1.75rem 1.75rem 2rem;
@@ -168,8 +160,6 @@ main {
     outline-offset: 1px;
 }
 
-/* buttons */
-
 #formulaire button {
     font-family: 'Public Sans', sans-serif;
     font-weight: 700;
@@ -217,23 +207,11 @@ main {
     outline-offset: 2px;
 }
 
-/* ---------- Results ---------- */
-
 #resultats {
     margin-top: 2.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-}
-
-#resultats:empty::before {
-    content: "Les résultats de ta recherche s'affichent ici.";
-    display: block;
-    padding: 1.5rem;
-    text-align: center;
-    color: var(--ink-soft);
-    font-style: italic;
-    border: 2px dashed var(--accent-3);
 }
 
 #resultats .resultat {
@@ -266,8 +244,6 @@ main {
     font-size: 0.9rem;
 }
 
-/* ---------- Footer ---------- */
-
 footer {
     border-top: 4px solid var(--line);
     padding: 1.25rem 1.5rem;
@@ -280,8 +256,6 @@ footer {
 footer p {
     margin: 0;
 }
-
-/* ---------- Responsive ---------- */
 
 @media (max-width: 480px) {
     #formulaire {
