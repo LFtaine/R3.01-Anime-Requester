@@ -2,7 +2,7 @@
 
 Une application web simple permettant de rechercher et d'afficher des informations sur des animes à l'aide d'une API. Projet réalisé dans le cadre de la ressource R3.01 (Développement Web).
 
-## 📁 Structure du projet
+##  Structure du projet
 
 ```text
 ├── CSS/
@@ -14,13 +14,13 @@ Une application web simple permettant de rechercher et d'afficher des informatio
 └── README.md           # Documentation du projet
 ```
 
-## 🛠️ Technologies utilisées
+##  Technologies utilisées
 
 - **HTML5** : Structure de la page
 - **CSS3** : Mise en page et styles
 - **JavaScript (Vanilla)** : Appels API (Fetch) et manipulation du DOM
 
-## 🚀 Utilisation
+##  Utilisation
 
 1. Clonez ou téléchargez le dépôt.
 2. Ouvrez le fichier `index.html` directement dans votre navigateur (ou via une extension type *Live Server*).
