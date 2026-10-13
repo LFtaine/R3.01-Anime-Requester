@@ -117,3 +117,37 @@ function afficherResultats(resultat) {
         conteneur.appendChild(card);
     });
 }
+
+// ---------- Bascule de thème (clair / sombre) ----------
+const boutonTheme = document.getElementById("theme-toggle");
+const iconeTheme = document.getElementById("theme-icon");
+const libelleTheme = document.getElementById("theme-label");
+
+function appliquerTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+
+    if (theme === "dark") {
+        iconeTheme.textContent = "☀";
+        libelleTheme.textContent = "Clair";
+        boutonTheme.setAttribute("aria-label", "Passer en mode clair");
+    } else {
+        iconeTheme.textContent = "☾";
+        libelleTheme.textContent = "Sombre";
+        boutonTheme.setAttribute("aria-label", "Passer en mode sombre");
+    }
+}
+
+function basculerTheme() {
+    const actuel = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    const suivant = actuel === "dark" ? "light" : "dark";
+    appliquerTheme(suivant);
+    try {
+        localStorage.setItem("theme", suivant);
+    } catch (e) {
+        console.warn("Impossible de mémoriser le thème :", e);
+    }
+}
+
+// Thème initial : déjà posé par le script du <head>, on synchronise juste le bouton
+appliquerTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
+boutonTheme.addEventListener("click", basculerTheme);
