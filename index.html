@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="fontain242">
-    <meta name="description" content="Recherchez un anime par titre ou par genre et découvrez ses épisodes, son classement et son synopsis.">
+    <meta name="description"
+        content="Recherchez un anime par titre ou par genre et découvrez ses épisodes, son classement et son synopsis.">
     <link rel="icon" type="image/png" href="favicon.png">
     <title>ANIME REQUESTER</title>
     <script>
@@ -22,7 +23,8 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Public+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Public+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="CSS/style.css">
     <script src="JS/script.js" defer></script>
 </head>
@@ -34,66 +36,124 @@
             <span id="theme-label">Sombre</span>
         </button>
         <h1>ANIME REQUESTER</h1>
+        <div class="api-configuration">
+            <label for="api-key">Clé API :</label>
+            <input type="password" id="api-key" placeholder="Saisissez votre clé API" autocomplete="off"
+                spellcheck="false" aria-describedby="api-key-info">
+        </div>
     </header>
     <main>
         <div class="bg-slideshow" aria-hidden="true">
             <div class="bg-track">
-                <img class="bg-slide" src="img/black_clover_panel.webp" width="617" height="900" alt="" decoding="async">
+                <img class="bg-slide" src="img/black_clover_panel.webp" width="617" height="900" alt=""
+                    decoding="async">
                 <img class="bg-slide" src="img/After_god.webp" width="810" height="580" alt="" decoding="async">
                 <img class="bg-slide" src="img/After_god2.webp" width="1255" height="900" alt="" decoding="async">
                 <img class="bg-slide" src="img/Ajin.webp" width="558" height="358" alt="" decoding="async">
-                <img class="bg-slide" src="img/Blue_period.webp" width="387" height="516" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Blue_period2.webp" width="656" height="467" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Bugle_call.webp" width="780" height="539" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Call_of_the_night.webp" width="860" height="587" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Chainsaw_man.webp" width="860" height="645" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/DBZ.webp" width="860" height="566" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/DBZ2.webp" width="829" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Gachiakuta.webp" width="461" height="664" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Kagurabachi1.webp" width="640" height="468" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Kagurabachi2.webp" width="860" height="606" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Kagurabachi3.webp" width="416" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/One_piece.webp" width="825" height="577" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/The_Promised_Neverland.webp" width="900" height="668" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Tokyo_ghoul.webp" width="1255" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Tokyo_ghoul2.webp" width="640" height="468" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Usogui.webp" width="1080" height="768" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Usogui2.webp" width="1262" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Usogui3.webp" width="640" height="775" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Vanitas.webp" width="665" height="461" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/made_in_abyss.webp" width="377" height="530" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/mha_panel2.webp" width="616" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/mha_panel.webp" width="616" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/snk_panel.webp" width="1080" height="804" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/to_your_eternity.webp" width="627" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/black_clover_panel.webp" width="617" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/After_god.webp" width="810" height="580" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/After_god2.webp" width="1255" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Ajin.webp" width="558" height="358" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Blue_period.webp" width="387" height="516" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Blue_period2.webp" width="656" height="467" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Bugle_call.webp" width="780" height="539" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Call_of_the_night.webp" width="860" height="587" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Chainsaw_man.webp" width="860" height="645" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/DBZ.webp" width="860" height="566" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/DBZ2.webp" width="829" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Gachiakuta.webp" width="461" height="664" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Kagurabachi1.webp" width="640" height="468" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Kagurabachi2.webp" width="860" height="606" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Kagurabachi3.webp" width="416" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/One_piece.webp" width="825" height="577" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/The_Promised_Neverland.webp" width="900" height="668" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Tokyo_ghoul.webp" width="1255" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Tokyo_ghoul2.webp" width="640" height="468" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Usogui.webp" width="1080" height="768" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Usogui2.webp" width="1262" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Usogui3.webp" width="640" height="775" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/Vanitas.webp" width="665" height="461" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/made_in_abyss.webp" width="377" height="530" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/mha_panel2.webp" width="616" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/mha_panel.webp" width="616" height="900" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/snk_panel.webp" width="1080" height="804" alt="" loading="lazy" decoding="async">
-                <img class="bg-slide" src="img/to_your_eternity.webp" width="627" height="900" alt="" loading="lazy" decoding="async">
+                <img class="bg-slide" src="img/Blue_period.webp" width="387" height="516" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Blue_period2.webp" width="656" height="467" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Bugle_call.webp" width="780" height="539" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Call_of_the_night.webp" width="860" height="587" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Chainsaw_man.webp" width="860" height="645" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/DBZ.webp" width="860" height="566" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/DBZ2.webp" width="829" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Gachiakuta.webp" width="461" height="664" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Kagurabachi1.webp" width="640" height="468" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Kagurabachi2.webp" width="860" height="606" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Kagurabachi3.webp" width="416" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/One_piece.webp" width="825" height="577" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/The_Promised_Neverland.webp" width="900" height="668" alt=""
+                    loading="lazy" decoding="async">
+                <img class="bg-slide" src="img/Tokyo_ghoul.webp" width="1255" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Tokyo_ghoul2.webp" width="640" height="468" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Usogui.webp" width="1080" height="768" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Usogui2.webp" width="1262" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Usogui3.webp" width="640" height="775" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Vanitas.webp" width="665" height="461" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/made_in_abyss.webp" width="377" height="530" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/mha_panel2.webp" width="616" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/mha_panel.webp" width="616" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/snk_panel.webp" width="1080" height="804" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/to_your_eternity.webp" width="627" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/black_clover_panel.webp" width="617" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/After_god.webp" width="810" height="580" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/After_god2.webp" width="1255" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Ajin.webp" width="558" height="358" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Blue_period.webp" width="387" height="516" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Blue_period2.webp" width="656" height="467" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Bugle_call.webp" width="780" height="539" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Call_of_the_night.webp" width="860" height="587" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Chainsaw_man.webp" width="860" height="645" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/DBZ.webp" width="860" height="566" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/DBZ2.webp" width="829" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Gachiakuta.webp" width="461" height="664" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Kagurabachi1.webp" width="640" height="468" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Kagurabachi2.webp" width="860" height="606" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Kagurabachi3.webp" width="416" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/One_piece.webp" width="825" height="577" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/The_Promised_Neverland.webp" width="900" height="668" alt=""
+                    loading="lazy" decoding="async">
+                <img class="bg-slide" src="img/Tokyo_ghoul.webp" width="1255" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Tokyo_ghoul2.webp" width="640" height="468" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Usogui.webp" width="1080" height="768" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Usogui2.webp" width="1262" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Usogui3.webp" width="640" height="775" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/Vanitas.webp" width="665" height="461" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/made_in_abyss.webp" width="377" height="530" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/mha_panel2.webp" width="616" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/mha_panel.webp" width="616" height="900" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/snk_panel.webp" width="1080" height="804" alt="" loading="lazy"
+                    decoding="async">
+                <img class="bg-slide" src="img/to_your_eternity.webp" width="627" height="900" alt="" loading="lazy"
+                    decoding="async">
             </div>
         </div>
         <form id="formulaire" method="post">

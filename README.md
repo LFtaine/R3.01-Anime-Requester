@@ -24,4 +24,5 @@ Une application web simple permettant de rechercher et d'afficher des informatio
 
 1. Clonez ou téléchargez le dépôt.
 2. Ouvrez le fichier `index.html` directement dans votre navigateur (ou via une extension type *Live Server*).
-3. Utilisez la barre de recherche pour consulter les fiches d'animes.
+3. Saisissez votre clé RapidAPI pour Anime DB dans le champ du header. Elle est mémorisée dans la session de l'onglet et restaurée après un rechargement. Videz le champ pour supprimer la clé mémorisée.
+4. Utilisez la barre de recherche pour consulter les fiches d'animes.
