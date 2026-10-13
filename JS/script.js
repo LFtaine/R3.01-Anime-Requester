@@ -82,13 +82,13 @@ function afficherResultats(resultat) {
         const genres = Array.isArray(anime.genres) ? anime.genres.join(", ") : anime.genres;
 
         card.innerHTML = `
-            <img src="${anime.image}" alt="${anime.title}">
-            <h3>${anime.title}</h3>
+            <img src="${anime.image}" alt="${anime.title}" width="115" height="170" loading="lazy">
+            <h2>${anime.title}</h2>
             <p><strong>Genres :</strong> ${genres}</p>
             <p><strong>Épisodes :</strong> ${anime.episodes || "Inconnu"}</p>
             <p><strong>Rang :</strong> ${anime.ranking || "N/A"}</p>
             <p><strong>Synopsis :</strong> ${anime.synopsis || "Aucun synopsis disponible."}</p>
-            ${anime.link ? `<a href="${anime.link}" target="_blank">Voir sur MyAnimeList</a>` : ""}
+            ${anime.link ? `<a href="${anime.link}" target="_blank" rel="noopener noreferrer">Voir sur MyAnimeList</a>` : ""}
         `;
 
         conteneur.appendChild(card);
