@@ -1,17 +1,11 @@
-let formulaire = document.getElementById("formulaire");
+const formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
-
-let type_recherche;
-let mot_cle;
-let resultat;
 
 function traiterFormulaire(event) {
     event.preventDefault();
 
-    type_recherche = document.getElementById("type_recherche").value;
-    mot_cle = document.getElementById("mot_cle").value.trim();
-    console.log("Type de recherche sélectionné : " + type_recherche);
-    console.log("Mot clé saisi : " + mot_cle);
+    const type_recherche = document.getElementById("type_recherche").value;
+    const mot_cle = document.getElementById("mot_cle").value.trim();
 
     if (!mot_cle) {
         afficherMessage("Veuillez saisir un paramètre de recherche.");
@@ -26,18 +20,31 @@ function recupererDonnees(type_recherche, mot_cle) {
 
     xhr.addEventListener('readystatechange', function () {
         if (this.readyState === this.DONE) {
-            console.log("Statut :", this.status);
-            console.log("Réponse brute :", this.responseText);
+            if (this.status === 0) {
+                return;
+            }
 
+            if (this.status < 200 || this.status >= 300) {
+                console.error("Erreur HTTP :", this.status);
+                afficherMessage(`Erreur lors de la recherche (code ${this.status}). Réessayez plus tard.`);
+                return;
+            }
+
+            let resultat;
             try {
                 resultat = JSON.parse(this.responseText);
             } catch (e) {
                 console.error("Réponse non JSON :", e);
+                afficherMessage("Réponse invalide du serveur. Réessayez plus tard.");
                 return;
             }
-            console.log("Résultat de la requête : ", resultat);
             afficherResultats(resultat);
         }
+    });
+
+    xhr.addEventListener('error', function () {
+        console.error("Erreur réseau");
+        afficherMessage("Impossible de contacter le serveur. Vérifiez votre connexion.");
     });
 
     let url;
@@ -53,7 +60,6 @@ function recupererDonnees(type_recherche, mot_cle) {
         return;
     }
 
-    console.log("URL :", url);
     xhr.open('GET', url);
     xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
@@ -61,9 +67,18 @@ function recupererDonnees(type_recherche, mot_cle) {
     xhr.send();
 }
 
+function echapper(texte) {
+    return String(texte)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function afficherMessage(message) {
     const conteneur = document.getElementById("resultats");
-    conteneur.innerHTML = `<p>${message}</p>`;
+    conteneur.innerHTML = `<p>${echapper(message)}</p>`;
 }
 
 function afficherResultats(resultat) {
@@ -82,13 +97,13 @@ function afficherResultats(resultat) {
         const genres = Array.isArray(anime.genres) ? anime.genres.join(", ") : anime.genres;
 
         card.innerHTML = `
-            <img src="${anime.image}" alt="${anime.title}" width="115" height="170" loading="lazy">
-            <h2>${anime.title}</h2>
-            <p><strong>Genres :</strong> ${genres}</p>
-            <p><strong>Épisodes :</strong> ${anime.episodes || "Inconnu"}</p>
-            <p><strong>Rang :</strong> ${anime.ranking || "N/A"}</p>
-            <p><strong>Synopsis :</strong> ${anime.synopsis || "Aucun synopsis disponible."}</p>
-            ${anime.link ? `<a href="${anime.link}" target="_blank" rel="noopener noreferrer">Voir sur MyAnimeList</a>` : ""}
+            <img src="${echapper(anime.image)}" alt="${echapper(anime.title)}" width="115" height="170" loading="lazy">
+            <h2>${echapper(anime.title)}</h2>
+            <p><strong>Genres :</strong> ${echapper(genres)}</p>
+            <p><strong>Épisodes :</strong> ${echapper(anime.episodes || "Inconnu")}</p>
+            <p><strong>Rang :</strong> ${echapper(anime.ranking || "N/A")}</p>
+            <p><strong>Synopsis :</strong> ${echapper(anime.synopsis || "Aucun synopsis disponible.")}</p>
+            ${anime.link ? `<a href="${echapper(anime.link)}" target="_blank" rel="noopener noreferrer">Voir sur MyAnimeList</a>` : ""}
         `;
 
         conteneur.appendChild(card);
