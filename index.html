@@ -89,6 +89,25 @@
             <br>
             <label for="mot_cle">Mot clé :</label>
             <input type="text" name="mot_cle" id="mot_cle" placeholder="ex : One Piece">
+            <fieldset id="filtres_genres" aria-describedby="aide_genres">
+                <legend>Filtrer par genre</legend>
+                <p id="aide_genres">Facultatif : cochez les genres à inclure dans la recherche.</p>
+                <div class="liste-genres">
+                    <label><input type="checkbox" name="genres" value="Action"> Action</label>
+                    <label><input type="checkbox" name="genres" value="Adventure"> Aventure</label>
+                    <label><input type="checkbox" name="genres" value="Comedy"> Comédie</label>
+                    <label><input type="checkbox" name="genres" value="Drama"> Drame</label>
+                    <label><input type="checkbox" name="genres" value="Fantasy"> Fantasy</label>
+                    <label><input type="checkbox" name="genres" value="Horror"> Horreur</label>
+                    <label><input type="checkbox" name="genres" value="Mystery"> Mystère</label>
+                    <label><input type="checkbox" name="genres" value="Romance"> Romance</label>
+                    <label><input type="checkbox" name="genres" value="Sci-Fi"> Science-fiction</label>
+                    <label><input type="checkbox" name="genres" value="Slice of Life"> Tranche de vie</label>
+                    <label><input type="checkbox" name="genres" value="Sports"> Sport</label>
+                    <label><input type="checkbox" name="genres" value="Supernatural"> Surnaturel</label>
+                    <label><input type="checkbox" name="genres" value="Suspense"> Suspense</label>
+                </div>
+            </fieldset>
             <button type="submit">Rechercher</button>
             <button type="reset">Effacer</button>
         </form>

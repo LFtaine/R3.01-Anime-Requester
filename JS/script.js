@@ -1,6 +1,22 @@
 let formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
 
+const selectRecherche = document.getElementById("type_recherche");
+const filtresGenres = document.getElementById("filtres_genres");
+
+function actualiserFiltresGenres() {
+    const rechercheParTitre = selectRecherche.value === "recherche_titre";
+    filtresGenres.hidden = !rechercheParTitre;
+    filtresGenres.disabled = !rechercheParTitre;
+}
+
+selectRecherche.addEventListener("change", actualiserFiltresGenres);
+formulaire.addEventListener("reset", () => {
+    // Le navigateur restaure les valeurs après l'événement reset.
+    setTimeout(actualiserFiltresGenres, 0);
+});
+actualiserFiltresGenres();
+
 let type_recherche;
 let mot_cle;
 let resultat;
@@ -18,10 +34,14 @@ function traiterFormulaire(event) {
         return;
     }
 
-    recupererDonnees(type_recherche, mot_cle);
+    const genresSelectionnes = type_recherche === "recherche_titre"
+        ? Array.from(formulaire.querySelectorAll('input[name="genres"]:checked'), caseGenre => caseGenre.value)
+        : [];
+
+    recupererDonnees(type_recherche, mot_cle, genresSelectionnes);
 }
 
-function recupererDonnees(type_recherche, mot_cle) {
+function recupererDonnees(type_recherche, mot_cle, genresSelectionnes = []) {
     const xhr = new XMLHttpRequest();
 
     xhr.addEventListener('readystatechange', function () {
@@ -47,6 +67,9 @@ function recupererDonnees(type_recherche, mot_cle) {
     }
     else if (type_recherche === "recherche_titre") {
         url = `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${encodeURIComponent(mot_cle)}&sortBy=ranking&sortOrder=asc`;
+        if (genresSelectionnes.length > 0) {
+            url += `&genres=${encodeURIComponent(genresSelectionnes.join(","))}`;
+        }
     }
     else {
         console.error("Type de recherche inconnu :", type_recherche);
