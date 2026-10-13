@@ -116,8 +116,13 @@ body {
 }
 
 @keyframes bgScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -189,6 +194,33 @@ header {
     header {
         padding-top: 3.75rem;
     }
+}
+
+.api-configuration {
+    max-width: 480px;
+    margin: 1.5rem auto 0;
+    text-align: left;
+}
+
+.api-configuration label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+}
+
+#api-key {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 2px solid var(--line);
+    border-radius: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+}
+
+#api-key:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
 }
 
 header h1 {
@@ -369,7 +401,7 @@ main {
     gap: 1.25rem;
 }
 
-#resultats > p {
+#resultats>p {
     background: var(--glass);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);

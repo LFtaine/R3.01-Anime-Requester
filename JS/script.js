@@ -1,6 +1,30 @@
 let formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
 
+const champCleApi = document.getElementById("api-key");
+const infoCleApi = document.getElementById("api-key-info");
+const stockageCleApi = "anime-requester-api-key";
+
+try {
+    champCleApi.value = sessionStorage.getItem(stockageCleApi) || "";
+} catch (e) {
+    infoCleApi.textContent = "Stockage indisponible : saisissez votre clé à chaque chargement.";
+}
+
+champCleApi.addEventListener("input", () => {
+    const cleApi = champCleApi.value.trim();
+    try {
+        if (cleApi) {
+            sessionStorage.setItem(stockageCleApi, cleApi);
+        } else {
+            sessionStorage.removeItem(stockageCleApi);
+        }
+        infoCleApi.textContent = "Clé conservée pour cette session uniquement.";
+    } catch (e) {
+        infoCleApi.textContent = "Stockage indisponible : saisissez votre clé à chaque chargement.";
+    }
+});
+
 const selectRecherche = document.getElementById("type_recherche");
 const filtresGenres = document.getElementById("filtres_genres");
 
@@ -42,6 +66,13 @@ function traiterFormulaire(event) {
 }
 
 function recupererDonnees(type_recherche, mot_cle, genresSelectionnes = []) {
+    const cleApi = champCleApi.value.trim();
+    if (!cleApi) {
+        afficherMessage("Veuillez saisir votre clé API pour lancer la recherche.");
+        champCleApi.focus();
+        return;
+    }
+
     const xhr = new XMLHttpRequest();
 
     xhr.addEventListener('readystatechange', function () {
@@ -78,7 +109,7 @@ function recupererDonnees(type_recherche, mot_cle, genresSelectionnes = []) {
 
     console.log("URL :", url);
     xhr.open('GET', url);
-    xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
+    xhr.setRequestHeader('x-rapidapi-key', cleApi);
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
 
     xhr.send();
