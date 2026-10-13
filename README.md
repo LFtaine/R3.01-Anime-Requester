@@ -2,6 +2,8 @@
 
 Une application web simple permettant de rechercher et d'afficher des informations sur des animes à l'aide d'une API. Projet réalisé dans le cadre de la ressource R3.01 (Développement Web).
 
+Application disponible sur https://lftaine.github.io/R3.01-Anime-Requester/
+
 ##  Structure du projet
 
 ```text
