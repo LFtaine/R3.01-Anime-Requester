@@ -8,6 +8,18 @@
     <meta name="description" content="Recherchez un anime par titre ou par genre et découvrez ses épisodes, son classement et son synopsis.">
     <link rel="icon" type="image/png" href="favicon.png">
     <title>ANIME REQUESTER</title>
+    <script>
+        // Applique le thème avant le rendu pour éviter un flash blanc
+        (function () {
+            try {
+                var t = localStorage.getItem("theme");
+                if (t !== "light" && t !== "dark") {
+                    t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+                }
+                document.documentElement.setAttribute("data-theme", t);
+            } catch (e) { }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Public+Sans:wght@400;500;600;700&display=swap">
@@ -17,6 +29,10 @@
 
 <body>
     <header>
+        <button type="button" id="theme-toggle" aria-label="Passer en mode sombre" title="Changer de thème">
+            <span id="theme-icon" aria-hidden="true">☾</span>
+            <span id="theme-label">Sombre</span>
+        </button>
         <h1>ANIME REQUESTER</h1>
     </header>
     <main>
