@@ -1,6 +1,22 @@
 let formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
 
+const selectRecherche = document.getElementById("type_recherche");
+const filtresGenres = document.getElementById("filtres_genres");
+
+function actualiserFiltresGenres() {
+    const rechercheParTitre = selectRecherche.value === "recherche_titre";
+    filtresGenres.hidden = !rechercheParTitre;
+    filtresGenres.disabled = !rechercheParTitre;
+}
+
+selectRecherche.addEventListener("change", actualiserFiltresGenres);
+formulaire.addEventListener("reset", () => {
+    // Le navigateur restaure les valeurs après l'événement reset.
+    setTimeout(actualiserFiltresGenres, 0);
+});
+actualiserFiltresGenres();
+
 let type_recherche;
 let mot_cle;
 let resultat;
@@ -18,10 +34,14 @@ function traiterFormulaire(event) {
         return;
     }
 
-    recupererDonnees(type_recherche, mot_cle);
+    const genresSelectionnes = type_recherche === "recherche_titre"
+        ? Array.from(formulaire.querySelectorAll('input[name="genres"]:checked'), caseGenre => caseGenre.value)
+        : [];
+
+    recupererDonnees(type_recherche, mot_cle, genresSelectionnes);
 }
 
-function recupererDonnees(type_recherche, mot_cle) {
+function recupererDonnees(type_recherche, mot_cle, genresSelectionnes = []) {
     const xhr = new XMLHttpRequest();
 
     xhr.addEventListener('readystatechange', function () {
@@ -47,6 +67,9 @@ function recupererDonnees(type_recherche, mot_cle) {
     }
     else if (type_recherche === "recherche_titre") {
         url = `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${encodeURIComponent(mot_cle)}&sortBy=ranking&sortOrder=asc`;
+        if (genresSelectionnes.length > 0) {
+            url += `&genres=${encodeURIComponent(genresSelectionnes.join(","))}`;
+        }
     }
     else {
         console.error("Type de recherche inconnu :", type_recherche);
@@ -94,3 +117,37 @@ function afficherResultats(resultat) {
         conteneur.appendChild(card);
     });
 }
+
+// ---------- Bascule de thème (clair / sombre) ----------
+const boutonTheme = document.getElementById("theme-toggle");
+const iconeTheme = document.getElementById("theme-icon");
+const libelleTheme = document.getElementById("theme-label");
+
+function appliquerTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+
+    if (theme === "dark") {
+        iconeTheme.textContent = "☀";
+        libelleTheme.textContent = "Clair";
+        boutonTheme.setAttribute("aria-label", "Passer en mode clair");
+    } else {
+        iconeTheme.textContent = "☾";
+        libelleTheme.textContent = "Sombre";
+        boutonTheme.setAttribute("aria-label", "Passer en mode sombre");
+    }
+}
+
+function basculerTheme() {
+    const actuel = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    const suivant = actuel === "dark" ? "light" : "dark";
+    appliquerTheme(suivant);
+    try {
+        localStorage.setItem("theme", suivant);
+    } catch (e) {
+        console.warn("Impossible de mémoriser le thème :", e);
+    }
+}
+
+// Thème initial : déjà posé par le script du <head>, on synchronise juste le bouton
+appliquerTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
+boutonTheme.addEventListener("click", basculerTheme);
