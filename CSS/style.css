@@ -349,7 +349,11 @@ main {
     font-family: 'Public Sans', sans-serif;
     font-weight: 700;
     font-size: 0.95rem;
-    padding: 0.75rem 1.5rem;
+    line-height: 1;
+    height: 3rem;
+    padding: 0 1.5rem;
+    min-width: 9rem;
+    box-sizing: border-box;
     border: 2px solid var(--line);
     border-radius: 0;
     cursor: pointer;
@@ -360,7 +364,7 @@ main {
     background: var(--accent);
     color: var(--accent-ink);
     box-shadow: 4px 4px 0 var(--shadow);
-    margin-right: 0.75rem;
+    margin-bottom: 0.4rem;
 }
 
 #formulaire button[type="reset"] {
