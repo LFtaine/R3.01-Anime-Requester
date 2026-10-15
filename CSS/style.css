@@ -166,8 +166,13 @@ body {
 }
 
 @keyframes bgScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -258,6 +263,33 @@ header {
     }
 }
 
+.api-configuration {
+    max-width: 480px;
+    margin: 1.5rem auto 0;
+    text-align: left;
+}
+
+.api-configuration label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+}
+
+#api-key {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 2px solid var(--line);
+    border-radius: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+}
+
+#api-key:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
+}
+
 header h1 {
     margin: 0;
     font-family: 'Dela Gothic One', 'Public Sans', sans-serif;
@@ -342,11 +374,60 @@ main {
     outline-offset: 1px;
 }
 
+#filtres_genres {
+    min-width: 0;
+    margin: 0 0 1.1rem;
+    padding: 0.75rem;
+    border: 2px solid var(--line);
+}
+
+#filtres_genres legend {
+    padding: 0 0.35rem;
+    color: var(--ink);
+}
+
+#aide_genres {
+    margin: 0 0 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+.liste-genres {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+}
+
+.liste-genres label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.liste-genres input {
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.liste-genres input:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
+}
+
 #formulaire button {
     font-family: 'Public Sans', sans-serif;
     font-weight: 700;
     font-size: 0.95rem;
-    padding: 0.75rem 1.5rem;
+    line-height: 1;
+    height: 3rem;
+    padding: 0 1.5rem;
+    min-width: 9rem;
+    box-sizing: border-box;
     border: 2px solid var(--line);
     border-radius: 0;
     cursor: pointer;
@@ -357,7 +438,7 @@ main {
     background: var(--accent);
     color: var(--accent-ink);
     box-shadow: 4px 4px 0 var(--shadow);
-    margin-right: 0.75rem;
+    margin-bottom: 0.4rem;
 }
 
 #formulaire button[type="reset"] {
@@ -398,7 +479,7 @@ main {
     gap: 1.25rem;
 }
 
-#resultats > p {
+#resultats>p {
     background: var(--glass);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);

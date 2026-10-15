@@ -1,8 +1,34 @@
 let formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
-formulaire.addEventListener("reset", function () {
-    document.getElementById("mot_cle").removeAttribute("aria-invalid");
+formulaire.addEventListener("reset", () => {
+    document.getElementById("resultats").innerHTML = "";
 });
+
+const champCleApi = document.getElementById("api-key");
+const infoCleApi = document.getElementById("api-key-info");
+const stockageCleApi = "anime-requester-api-key";
+
+try {
+    champCleApi.value = sessionStorage.getItem(stockageCleApi) || "";
+} catch (e) {
+    infoCleApi.textContent = "Stockage indisponible : saisissez votre clé à chaque chargement.";
+}
+
+champCleApi.addEventListener("input", () => {
+    const cleApi = champCleApi.value.trim();
+    try {
+        if (cleApi) {
+            sessionStorage.setItem(stockageCleApi, cleApi);
+        } else {
+            sessionStorage.removeItem(stockageCleApi);
+        }
+        infoCleApi.textContent = "Clé conservée pour cette session uniquement.";
+    } catch (e) {
+        infoCleApi.textContent = "Stockage indisponible : saisissez votre clé à chaque chargement.";
+    }
+});
+
+const filtresGenres = document.getElementById("filtres_genres");
 
 let type_recherche;
 let mot_cle;
@@ -11,25 +37,38 @@ let resultat;
 function traiterFormulaire(event) {
     event.preventDefault();
 
-    const champ = document.getElementById("mot_cle");
-    type_recherche = document.getElementById("type_recherche").value;
-    mot_cle = champ.value.trim();
-    console.log("Type de recherche sélectionné : " + type_recherche);
-    console.log("Mot clé saisi : " + mot_cle);
+    mot_cle = document.getElementById("mot_cle").value.trim();
+    const genresSelectionnes = Array.from(
+        formulaire.querySelectorAll('input[name="genres"]:checked'),
+        caseGenre => caseGenre.value
+    );
 
-    if (!mot_cle) {
-        // Erreur identifiée en texte, liée au champ, et focus renvoyé sur celui-ci
-        champ.setAttribute("aria-invalid", "true");
-        afficherMessage("Veuillez saisir un paramètre de recherche : un titre ou un genre.", true);
-        champ.focus();
+    if (mot_cle) {
+        // Mot-clé saisi : recherche par titre (genres cochés = filtres optionnels)
+        type_recherche = "recherche_titre";
+        console.log("Type de recherche : recherche_titre");
+        console.log("Mot clé saisi : " + mot_cle);
+        recupererDonnees(type_recherche, mot_cle, genresSelectionnes);
+    } else if (genresSelectionnes.length > 0) {
+        // Pas de mot-clé mais des genres cochés : recherche par genre
+        type_recherche = "recherche_genre";
+        mot_cle = genresSelectionnes[0];
+        console.log("Type de recherche : recherche_genre");
+        console.log("Genre sélectionné : " + mot_cle);
+        recupererDonnees(type_recherche, mot_cle);
+    } else {
+        afficherMessage("Veuillez saisir un titre ou cocher au moins un genre.");
+    }
+}
+
+function recupererDonnees(type_recherche, mot_cle, genresSelectionnes = []) {
+    const cleApi = champCleApi.value.trim();
+    if (!cleApi) {
+        afficherMessage("Veuillez saisir votre clé API pour lancer la recherche.");
+        champCleApi.focus();
         return;
     }
 
-    champ.removeAttribute("aria-invalid");
-    recupererDonnees(type_recherche, mot_cle);
-}
-
-function recupererDonnees(type_recherche, mot_cle) {
     const xhr = new XMLHttpRequest();
 
     xhr.addEventListener('readystatechange', function () {
@@ -66,6 +105,9 @@ function recupererDonnees(type_recherche, mot_cle) {
     }
     else if (type_recherche === "recherche_titre") {
         url = `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${encodeURIComponent(mot_cle)}&sortBy=ranking&sortOrder=asc`;
+        if (genresSelectionnes.length > 0) {
+            url += `&genres=${encodeURIComponent(genresSelectionnes.join(","))}`;
+        }
     }
     else {
         console.error("Type de recherche inconnu :", type_recherche);
@@ -74,7 +116,7 @@ function recupererDonnees(type_recherche, mot_cle) {
 
     console.log("URL :", url);
     xhr.open('GET', url);
-    xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
+    xhr.setRequestHeader('x-rapidapi-key', cleApi);
     xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
 
     indiquerChargement(true);
