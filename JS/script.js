@@ -1,5 +1,8 @@
 let formulaire = document.getElementById("formulaire");
 formulaire.addEventListener("submit", traiterFormulaire);
+formulaire.addEventListener("reset", () => {
+    document.getElementById("resultats").innerHTML = "";
+});
 
 const champCleApi = document.getElementById("api-key");
 const infoCleApi = document.getElementById("api-key-info");
