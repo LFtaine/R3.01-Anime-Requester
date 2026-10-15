@@ -25,21 +25,7 @@ champCleApi.addEventListener("input", () => {
     }
 });
 
-const selectRecherche = document.getElementById("type_recherche");
 const filtresGenres = document.getElementById("filtres_genres");
-
-function actualiserFiltresGenres() {
-    const rechercheParTitre = selectRecherche.value === "recherche_titre";
-    filtresGenres.hidden = !rechercheParTitre;
-    filtresGenres.disabled = !rechercheParTitre;
-}
-
-selectRecherche.addEventListener("change", actualiserFiltresGenres);
-formulaire.addEventListener("reset", () => {
-    // Le navigateur restaure les valeurs après l'événement reset.
-    setTimeout(actualiserFiltresGenres, 0);
-});
-actualiserFiltresGenres();
 
 let type_recherche;
 let mot_cle;
@@ -48,21 +34,28 @@ let resultat;
 function traiterFormulaire(event) {
     event.preventDefault();
 
-    type_recherche = document.getElementById("type_recherche").value;
     mot_cle = document.getElementById("mot_cle").value.trim();
-    console.log("Type de recherche sélectionné : " + type_recherche);
-    console.log("Mot clé saisi : " + mot_cle);
+    const genresSelectionnes = Array.from(
+        formulaire.querySelectorAll('input[name="genres"]:checked'),
+        caseGenre => caseGenre.value
+    );
 
-    if (!mot_cle) {
-        afficherMessage("Veuillez saisir un paramètre de recherche.");
-        return;
+    if (mot_cle) {
+        // Mot-clé saisi : recherche par titre (genres cochés = filtres optionnels)
+        type_recherche = "recherche_titre";
+        console.log("Type de recherche : recherche_titre");
+        console.log("Mot clé saisi : " + mot_cle);
+        recupererDonnees(type_recherche, mot_cle, genresSelectionnes);
+    } else if (genresSelectionnes.length > 0) {
+        // Pas de mot-clé mais des genres cochés : recherche par genre
+        type_recherche = "recherche_genre";
+        mot_cle = genresSelectionnes[0];
+        console.log("Type de recherche : recherche_genre");
+        console.log("Genre sélectionné : " + mot_cle);
+        recupererDonnees(type_recherche, mot_cle);
+    } else {
+        afficherMessage("Veuillez saisir un titre ou cocher au moins un genre.");
     }
-
-    const genresSelectionnes = type_recherche === "recherche_titre"
-        ? Array.from(formulaire.querySelectorAll('input[name="genres"]:checked'), caseGenre => caseGenre.value)
-        : [];
-
-    recupererDonnees(type_recherche, mot_cle, genresSelectionnes);
 }
 
 function recupererDonnees(type_recherche, mot_cle, genresSelectionnes = []) {
