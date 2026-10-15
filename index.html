@@ -7,7 +7,7 @@
     <meta name="author" content="fontain242">
     <meta name="description" content="Recherchez un anime par titre ou par genre et découvrez ses épisodes, son classement et son synopsis.">
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>ANIME REQUESTER</title>
+    <title>Anime Requester – Recherche d'anime par titre ou par genre</title>
     <script>
         // Applique le thème avant le rendu pour éviter un flash blanc
         (function () {
@@ -28,14 +28,19 @@
 </head>
 
 <body>
+    <a class="skip-link" href="#contenu">Aller au contenu principal</a>
     <header>
-        <button type="button" id="theme-toggle" aria-label="Passer en mode sombre" title="Changer de thème">
+        <button type="button" id="theme-toggle" class="btn-header" aria-label="Passer en mode sombre">
             <span id="theme-icon" aria-hidden="true">☾</span>
             <span id="theme-label">Sombre</span>
         </button>
+        <button type="button" id="anim-toggle" class="btn-header" aria-label="Mettre en pause l'animation de fond">
+            <span id="anim-icon" aria-hidden="true">❚❚</span>
+            <span id="anim-label">Pause</span>
+        </button>
         <h1>ANIME REQUESTER</h1>
     </header>
-    <main>
+    <main id="contenu" tabindex="-1">
         <div class="bg-slideshow" aria-hidden="true">
             <div class="bg-track">
                 <img class="bg-slide" src="img/black_clover_panel.webp" width="617" height="900" alt="" decoding="async">
@@ -96,21 +101,20 @@
                 <img class="bg-slide" src="img/to_your_eternity.webp" width="627" height="900" alt="" loading="lazy" decoding="async">
             </div>
         </div>
-        <form id="formulaire" method="post">
+        <form id="formulaire" method="post" role="search" aria-label="Recherche d'anime" novalidate>
             <label for="type_recherche">Type de recherche :</label>
             <select name="type_recherche" id="type_recherche">
                 <option value="recherche_titre">Recherche par titre</option>
                 <option value="recherche_genre">Recherche par genre</option>
             </select>
-            <br>
             <label for="mot_cle">Mot clé :</label>
-            <input type="text" name="mot_cle" id="mot_cle" placeholder="ex : One Piece">
+            <p id="aide_mot_cle" class="aide">Champ obligatoire. Saisissez un titre (ex : One Piece) ou, pour une recherche par genre, un genre en anglais (ex : Action).</p>
+            <input type="text" name="mot_cle" id="mot_cle" placeholder="ex : One Piece" aria-required="true" aria-describedby="aide_mot_cle">
             <button type="submit">Rechercher</button>
             <button type="reset">Effacer</button>
         </form>
-        <div id="resultats" aria-live="polite"></div>
-
-
+        <p id="statut" class="sr-only" role="status" aria-live="polite"></p>
+        <div id="resultats" aria-busy="false"></div>
     </main>
     <footer>
         <p>Réalisé par Louis FONTAINE, Matheo GRENECHE, Armand PIVERT et Dylan MESNAGE</p>
