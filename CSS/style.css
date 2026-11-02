@@ -178,7 +178,7 @@ main {
     background: var(--accent);
     color: var(--accent-ink);
     box-shadow: 4px 4px 0 var(--ink);
-    margin-right: 0.75rem;
+    width: 100%;
 }
 
 #formulaire button[type="reset"] {
@@ -186,6 +186,7 @@ main {
     color: var(--accent-2);
     border-color: var(--accent-2);
     box-shadow: 4px 4px 0 var(--accent-2);
+    width: 100%;
 }
 
 #formulaire button:hover {
