@@ -8,12 +8,12 @@
 var ANILIST_URL = "https://graphql.anilist.co";
 
 // ---------- Elements DOM ----------
-var formulaire   = document.getElementById("formulaire");
-var selectType   = document.getElementById("type_recherche");
-var champMotCle  = document.getElementById("mot_cle");
-var champSaison  = document.getElementById("saison_wrapper");
+var formulaire = document.getElementById("formulaire");
+var selectType = document.getElementById("type_recherche");
+var champMotCle = document.getElementById("mot_cle");
+var champSaison = document.getElementById("saison_wrapper");
 var selectSaison = document.getElementById("saison");
-var selectAnnee  = document.getElementById("annee");
+var selectAnnee = document.getElementById("annee");
 var conteneurRes = document.getElementById("resultats");
 
 // ---------- Initialisation ----------
@@ -51,8 +51,8 @@ function adapterFormulaire() {
     }
 
     var placeholders = {
-        recherche_titre:  "ex : One Piece, Naruto...",
-        recherche_genre:  "ex : Action, Comedy, Romance...",
+        recherche_titre: "ex : One Piece, Naruto...",
+        recherche_genre: "ex : Action, Comedy, Romance...",
         recherche_saison: ""
     };
     champMotCle.placeholder = placeholders[type] || "";
@@ -61,7 +61,7 @@ function adapterFormulaire() {
 function traiterFormulaire(event) {
     event.preventDefault();
 
-    var type   = selectType.value;
+    var type = selectType.value;
     var motCle = champMotCle.value.trim();
 
     if (type !== "recherche_saison" && !motCle) {
@@ -120,7 +120,7 @@ function recupererDonnees(type, motCle) {
     } else if (type === "recherche_saison") {
         // 3. Recherche par saison
         var saison = selectSaison.value.toUpperCase(); // WINTER, SPRING, SUMMER, FALL
-        var annee  = parseInt(selectAnnee.value, 10);
+        var annee = parseInt(selectAnnee.value, 10);
         query = [
             "query ($season: MediaSeason, $seasonYear: Int, $perPage: Int) {",
             "  Page(perPage: $perPage) {",
@@ -234,20 +234,20 @@ function afficherResultats(animes) {
         card.className = "card";
 
         // Titre : anglais en priorite, sinon romaji, sinon natif
-        var titre    = anime.title.english || anime.title.romaji || anime.title.native || "Titre inconnu";
-        var image    = (anime.coverImage && anime.coverImage.large) ? anime.coverImage.large : "";
-        var genres   = (anime.genres || []).join(", ") || "—";
+        var titre = anime.title.english || anime.title.romaji || anime.title.native || "Titre inconnu";
+        var image = (anime.coverImage && anime.coverImage.large) ? anime.coverImage.large : "";
+        var genres = (anime.genres || []).join(", ") || "—";
         var episodes = (anime.episodes !== null && anime.episodes !== undefined) ? anime.episodes : "?";
-        var score    = anime.averageScore ? (anime.averageScore / 10).toFixed(1) + " / 10" : "N/A";
-        var saison   = anime.season ? (anime.season.charAt(0) + anime.season.slice(1).toLowerCase()) : "";
-        var annee    = anime.seasonYear ? anime.seasonYear : "";
+        var score = anime.averageScore ? (anime.averageScore / 10).toFixed(1) + " / 10" : "N/A";
+        var saison = anime.season ? (anime.season.charAt(0) + anime.season.slice(1).toLowerCase()) : "";
+        var annee = anime.seasonYear ? anime.seasonYear : "";
         var diffusion = (saison && annee) ? saison + " " + annee : annee || saison || "—";
 
         // Nettoyer le synopsis (l'API peut renvoyer des \n en excès)
         var synopsis = (anime.description || "Aucun synopsis disponible.")
             .replace(/\n{2,}/g, " ")
             .trim();
-        var lien     = anime.siteUrl || "";
+        var lien = anime.siteUrl || "";
 
         var imgHTML = image
             ? '<img src="' + image + '" alt="' + echapper(titre) + '" width="115" height="170" loading="lazy">'
@@ -259,14 +259,72 @@ function afficherResultats(animes) {
 
         card.innerHTML =
             imgHTML +
-            "<h2>" + echapper(titre)                + "</h2>" +
-            "<p><strong>Genres :</strong> "          + echapper(genres)           + "</p>" +
-            "<p><strong>Episodes :</strong> "        + echapper(String(episodes)) + "</p>" +
-            "<p><strong>Score :</strong> "           + echapper(score)            + "</p>" +
-            "<p><strong>Diffusion :</strong> "       + echapper(diffusion)        + "</p>" +
-            "<p><strong>Synopsis :</strong> "        + echapper(synopsis)         + "</p>" +
+            "<h2>" + echapper(titre) + "</h2>" +
+            "<p><strong>Genres :</strong> " + echapper(genres) + "</p>" +
+            "<p><strong>Episodes :</strong> " + echapper(String(episodes)) + "</p>" +
+            "<p><strong>Score :</strong> " + echapper(score) + "</p>" +
+            "<p><strong>Diffusion :</strong> " + echapper(diffusion) + "</p>" +
+            "<p><strong>Synopsis :</strong> " + echapper(synopsis) + "</p>" +
             lienHTML;
 
         conteneurRes.appendChild(card);
     });
 }
+
+
+// ============================================================
+//  Theme sombre / clair
+// ============================================================
+
+(function () {
+    var btn   = document.getElementById("theme-toggle");
+    var label = document.getElementById("theme-label");
+    if (!btn) return;
+
+    function appliquerTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try { localStorage.setItem("theme", theme); } catch (e) {}
+        if (theme === "dark") {
+            label.textContent = "Clair";
+            btn.setAttribute("aria-label", "Passer en mode clair");
+        } else {
+            label.textContent = "Sombre";
+            btn.setAttribute("aria-label", "Passer en mode sombre");
+        }
+    }
+
+    // Appliquer le theme memorise ou systeme
+    var themeInitial;
+    try { themeInitial = localStorage.getItem("theme"); } catch (e) {}
+    if (themeInitial !== "light" && themeInitial !== "dark") {
+        themeInitial = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    appliquerTheme(themeInitial);
+
+    btn.addEventListener("click", function () {
+        var actuel = document.documentElement.getAttribute("data-theme");
+        appliquerTheme(actuel === "dark" ? "light" : "dark");
+    });
+})();
+
+// ============================================================
+//  Pause / lecture de l'animation de fond
+// ============================================================
+
+(function () {
+    var btn   = document.getElementById("anim-toggle");
+    var icon  = document.getElementById("anim-icon");
+    var label = document.getElementById("anim-label");
+    var track = document.querySelector(".bg-track");
+    if (!btn || !track) return;
+
+    var en_pause = false;
+
+    btn.addEventListener("click", function () {
+        en_pause = !en_pause;
+        track.style.animationPlayState = en_pause ? "paused" : "running";
+        icon.textContent  = en_pause ? "\u25B6" : "\u275A\u275A";
+        label.textContent = en_pause ? "Lecture" : "Pause";
+        btn.setAttribute("aria-label", en_pause ? "Reprendre l'animation de fond" : "Mettre en pause l'animation de fond");
+    });
+})();

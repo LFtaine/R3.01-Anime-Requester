@@ -9,10 +9,105 @@
     --accent-3: #E8A23B;
     --accent-ink: #FBF8F2;
     --line: #191A1F;
+    --shadow: #191A1F;
+    --glass: rgba(251, 248, 242, 0.82);
+    --placeholder: #5E5A53;
+    --accent-2-ink: #FBF8F2;
+    --slide-filter: none;
+    color-scheme: light;
+}
+
+/* ---------- Mode sombre ---------- */
+/* Automatique selon le réglage du système… */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --paper: #14151A;
+        --paper-raised: #1D1F26;
+        --paper-dark: #1B1C22;
+        --ink: #DCD8CE;
+        --ink-soft: #B4B0A6;
+        --accent: #CF3A2F;
+        --accent-2: #7C9CFF;
+        --accent-3: #F0B454;
+        --accent-ink: #FBF8F2;
+        --line: #80828A;
+        --shadow: #565860;
+        --glass: rgba(29, 31, 38, 0.82);
+        --placeholder: #8B877E;
+        --accent-2-ink: #10131F;
+        --slide-filter: brightness(0.45) saturate(0.9);
+        color-scheme: dark;
+    }
+}
+
+/* …ou forcé via <html data-theme="dark"> (ex. bouton de bascule) */
+:root[data-theme="dark"] {
+    --paper: #14151A;
+    --paper-raised: #1D1F26;
+    --paper-dark: #1B1C22;
+    --ink: #DCD8CE;
+    --ink-soft: #B4B0A6;
+    --accent: #CF3A2F;
+    --accent-2: #7C9CFF;
+    --accent-3: #F0B454;
+    --accent-ink: #FBF8F2;
+    --line: #80828A;
+    --shadow: #565860;
+    --glass: rgba(29, 31, 38, 0.82);
+    --placeholder: #8B877E;
+    --accent-2-ink: #10131F;
+    --slide-filter: brightness(0.45) saturate(0.9);
+    color-scheme: dark;
 }
 
 * {
     box-sizing: border-box;
+}
+
+/* Texte uniquement pour lecteurs d'écran */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Lien d'évitement (WCAG 2.4.1) */
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    color: var(--paper);
+    background: var(--ink);
+    border: 2px solid var(--line);
+    text-decoration: none;
+    transform: translateY(-120%);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+main:focus {
+    outline: none;
+}
+
+/* Focus visible sur tous les éléments interactifs (WCAG 2.4.7) */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
 }
 
 html {
@@ -63,11 +158,21 @@ body {
     width: auto;
     max-width: none;
     margin-right: 0.75rem;
+    filter: var(--slide-filter);
+}
+
+.anim-pause .bg-track {
+    animation-play-state: paused;
 }
 
 @keyframes bgScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -83,6 +188,106 @@ header {
     padding: 2.75rem 1.5rem 2.25rem;
     text-align: center;
     background: var(--paper-dark);
+}
+
+.btn-header {
+    position: absolute;
+    top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 2px solid var(--line);
+    border-radius: 0;
+    padding: 0.45rem 0.8rem;
+    box-shadow: 3px 3px 0 var(--shadow);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+#theme-toggle {
+    left: 1rem;
+}
+
+#anim-toggle {
+    right: 1rem;
+}
+
+.btn-header span[aria-hidden="true"] {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.btn-header:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--shadow);
+}
+
+.btn-header:active {
+    transform: translate(0, 0);
+    box-shadow: 1px 1px 0 var(--shadow);
+}
+
+@media (max-width: 640px) {
+    .btn-header {
+        top: 0.6rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    #theme-toggle {
+        left: 0.6rem;
+    }
+
+    #anim-toggle {
+        right: 0.6rem;
+    }
+
+    #theme-label,
+    #anim-label {
+        display: none;
+    }
+
+    header {
+        padding-top: 3.75rem;
+    }
+}
+
+/* Plus d'animation si l'utilisateur la refuse : le bouton pause est inutile */
+@media (prefers-reduced-motion: reduce) {
+    #anim-toggle {
+        display: none;
+    }
+}
+
+.api-configuration {
+    max-width: 480px;
+    margin: 1.5rem auto 0;
+    text-align: left;
+}
+
+.api-configuration label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+}
+
+#api-key {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 2px solid var(--line);
+    border-radius: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+}
+
+#api-key:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
 }
 
 header h1 {
@@ -110,11 +315,10 @@ main {
     position: relative;
     z-index: 1;
     margin-top: 3rem;
-    background: rgba(251, 248, 242, 0.82);
+    background: var(--glass);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     border: 3px solid var(--line);
-    box-shadow: 8px 8px 0 var(--ink);
     padding: 1.75rem 1.75rem 2rem;
     display: flex;
     flex-direction: column;
@@ -125,6 +329,13 @@ main {
 #formulaire label,
 #formulaire {
     font-size: 0.95rem;
+    color: var(--ink-soft);
+}
+
+#formulaire .aide {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 400;
     color: var(--ink-soft);
 }
 
@@ -153,7 +364,7 @@ main {
 }
 
 #mot_cle::placeholder {
-    color: #6E6A62;
+    color: var(--placeholder);
     font-weight: 400;
 }
 
@@ -163,11 +374,60 @@ main {
     outline-offset: 1px;
 }
 
+#filtres_genres {
+    min-width: 0;
+    margin: 0 0 1.1rem;
+    padding: 0.75rem;
+    border: 2px solid var(--line);
+}
+
+#filtres_genres legend {
+    padding: 0 0.35rem;
+    color: var(--ink);
+}
+
+#aide_genres {
+    margin: 0 0 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+.liste-genres {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+}
+
+.liste-genres label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.liste-genres input {
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.liste-genres input:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
+}
+
 #formulaire button {
     font-family: 'Public Sans', sans-serif;
     font-weight: 700;
     font-size: 0.95rem;
-    padding: 0.75rem 1.5rem;
+    line-height: 1;
+    height: 3rem;
+    padding: 0 1.5rem;
+    min-width: 9rem;
+    box-sizing: border-box;
     border: 2px solid var(--line);
     border-radius: 0;
     cursor: pointer;
@@ -194,7 +454,7 @@ main {
 }
 
 #formulaire button[type="submit"]:hover {
-    box-shadow: 6px 6px 0 var(--ink);
+    box-shadow: 6px 6px 0 var(--shadow);
 }
 
 #formulaire button[type="reset"]:hover {
@@ -203,7 +463,7 @@ main {
 
 #formulaire button:active {
     transform: translate(0, 0);
-    box-shadow: 2px 2px 0 var(--ink);
+    box-shadow: 2px 2px 0 var(--shadow);
 }
 
 #formulaire button:focus-visible {
@@ -220,12 +480,12 @@ main {
     gap: 1.25rem;
 }
 
-#resultats > p {
-    background: rgba(251, 248, 242, 0.82);
+#resultats>p {
+    background: var(--glass);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     border: 2px dashed var(--line);
-    box-shadow: 5px 5px 0 var(--ink);
+    box-shadow: 5px 5px 0 var(--shadow);
     padding: 1.25rem;
     text-align: center;
     font-weight: 600;
@@ -235,12 +495,12 @@ main {
 
 #resultats .resultat,
 #resultats .card {
-    background: rgba(251, 248, 242, 0.82);
+    background: var(--glass);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     border: 2px solid var(--line);
     border-left: 6px solid var(--accent);
-    box-shadow: 5px 5px 0 var(--ink);
+    box-shadow: 5px 5px 0 var(--shadow);
     padding: 1.25rem;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -248,7 +508,7 @@ main {
 #resultats .resultat:hover,
 #resultats .card:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 7px 7px 0 var(--ink);
+    box-shadow: 7px 7px 0 var(--shadow);
 }
 
 #resultats .resultat h2 {
@@ -281,7 +541,7 @@ main {
     object-fit: cover;
     display: block;
     border: 2px solid var(--line);
-    box-shadow: 3px 3px 0 var(--ink);
+    box-shadow: 3px 3px 0 var(--shadow);
     background: var(--paper-dark);
 }
 
@@ -308,13 +568,6 @@ main {
     color: var(--ink);
 }
 
-#resultats .card p:last-of-type {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-top: 0.25rem;
-}
 
 #resultats .card a {
     grid-column: 2;
@@ -323,19 +576,24 @@ main {
     font-family: 'Public Sans', sans-serif;
     font-weight: 700;
     font-size: 0.88rem;
-    color: var(--accent-ink);
+    color: var(--accent-2-ink);
     background: var(--accent-2);
     border: 2px solid var(--line);
     padding: 0.45rem 0.9rem;
     text-decoration: none;
-    box-shadow: 3px 3px 0 var(--ink);
+    box-shadow: 3px 3px 0 var(--shadow);
     transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 
 #resultats .card a:hover {
     transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0 var(--ink);
+    box-shadow: 5px 5px 0 var(--shadow);
     background: var(--accent);
+    color: var(--accent-ink);
+}
+
+#resultats .card a:focus-visible {
+    outline-color: var(--ink);
 }
 
 @media (max-width: 520px) {
@@ -378,7 +636,6 @@ footer p {
 
 @media (max-width: 480px) {
     #formulaire {
-        box-shadow: 5px 5px 0 var(--ink);
         padding: 1.4rem 1.25rem 1.6rem;
     }
 
@@ -457,7 +714,9 @@ footer p {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* ---- Image manquante ---- */
@@ -469,4 +728,4 @@ footer p {
     background: var(--paper-dark);
     border: 2px solid var(--line);
     box-shadow: 3px 3px 0 var(--ink);
-}
+}
