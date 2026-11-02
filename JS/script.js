@@ -1,96 +1,272 @@
-let formulaire = document.getElementById("formulaire");
+// ============================================================
+//  Anime Requester - script.js
+//  API : AniList GraphQL  (https://graphql.anilist.co)
+//  Auteurs : Louis FONTAINE, Matheo GRENECHE, Armand PIVERT,
+//            Dylan MESNAGE
+// ============================================================
+
+var ANILIST_URL = "https://graphql.anilist.co";
+
+// ---------- Elements DOM ----------
+var formulaire   = document.getElementById("formulaire");
+var selectType   = document.getElementById("type_recherche");
+var champMotCle  = document.getElementById("mot_cle");
+var champSaison  = document.getElementById("saison_wrapper");
+var selectSaison = document.getElementById("saison");
+var selectAnnee  = document.getElementById("annee");
+var conteneurRes = document.getElementById("resultats");
+
+// ---------- Initialisation ----------
+// Peupler le select des annees (annee en cours jusqu'a 2000)
+(function () {
+    var anneeActuelle = new Date().getFullYear();
+    for (var a = anneeActuelle; a >= 2000; a--) {
+        var opt = document.createElement("option");
+        opt.value = a;
+        opt.textContent = a;
+        if (a === anneeActuelle) opt.selected = true;
+        selectAnnee.appendChild(opt);
+    }
+})();
+
+adapterFormulaire();
+selectType.addEventListener("change", adapterFormulaire);
 formulaire.addEventListener("submit", traiterFormulaire);
 
-let type_recherche;
-let mot_cle;
-let resultat;
+// ============================================================
+//  Formulaire
+// ============================================================
+
+function adapterFormulaire() {
+    var type = selectType.value;
+
+    if (type === "recherche_saison") {
+        champMotCle.closest(".champ-wrapper").style.display = "none";
+        champSaison.style.display = "";
+        champMotCle.removeAttribute("required");
+    } else {
+        champMotCle.closest(".champ-wrapper").style.display = "";
+        champSaison.style.display = "none";
+        champMotCle.setAttribute("required", "");
+    }
+
+    var placeholders = {
+        recherche_titre:  "ex : One Piece, Naruto...",
+        recherche_genre:  "ex : Action, Comedy, Romance...",
+        recherche_saison: ""
+    };
+    champMotCle.placeholder = placeholders[type] || "";
+}
 
 function traiterFormulaire(event) {
     event.preventDefault();
 
-    type_recherche = document.getElementById("type_recherche").value;
-    mot_cle = document.getElementById("mot_cle").value.trim();
-    console.log("Type de recherche sélectionné : " + type_recherche);
-    console.log("Mot clé saisi : " + mot_cle);
+    var type   = selectType.value;
+    var motCle = champMotCle.value.trim();
 
-    if (!mot_cle) {
-        afficherMessage("Veuillez saisir un paramètre de recherche.");
+    if (type !== "recherche_saison" && !motCle) {
+        afficherMessage("Veuillez saisir un parametre de recherche.");
         return;
     }
 
-    recupererDonnees(type_recherche, mot_cle);
+    afficherChargement();
+    recupererDonnees(type, motCle);
 }
 
-function recupererDonnees(type_recherche, mot_cle) {
-    const xhr = new XMLHttpRequest();
+// ============================================================
+//  Requetes AniList (GraphQL via XHR POST)
+// ============================================================
 
-    xhr.addEventListener('readystatechange', function () {
-        if (this.readyState === this.DONE) {
-            console.log("Statut :", this.status);
-            console.log("Réponse brute :", this.responseText);
+function recupererDonnees(type, motCle) {
+    var query, variables;
 
-            try {
-                resultat = JSON.parse(this.responseText);
-            } catch (e) {
-                console.error("Réponse non JSON :", e);
-                return;
-            }
-            console.log("Résultat de la requête : ", resultat);
-            afficherResultats(resultat);
-        }
-    });
+    if (type === "recherche_titre") {
+        // 1. Recherche par titre
+        query = [
+            "query ($search: String, $perPage: Int) {",
+            "  Page(perPage: $perPage) {",
+            "    media(search: $search, type: ANIME, sort: SEARCH_MATCH) {",
+            "      id title { romaji english native }",
+            "      coverImage { large }",
+            "      genres episodes averageScore popularity",
+            "      season seasonYear",
+            "      description(asHtml: false)",
+            "      siteUrl",
+            "    }",
+            "  }",
+            "}"
+        ].join("\n");
+        variables = { search: motCle, perPage: 10 };
 
-    let url;
-    if (type_recherche === "recherche_genre") {
-        mot_cle = mot_cle.charAt(0).toUpperCase() + mot_cle.slice(1).toLowerCase();
-        url = `https://anime-db.p.rapidapi.com/anime?page=1&size=10&genres=${encodeURIComponent(mot_cle)}&sortBy=ranking&sortOrder=asc`;
-    }
-    else if (type_recherche === "recherche_titre") {
-        url = `https://anime-db.p.rapidapi.com/anime?page=1&size=10&search=${encodeURIComponent(mot_cle)}&sortBy=ranking&sortOrder=asc`;
-    }
-    else {
-        console.error("Type de recherche inconnu :", type_recherche);
+    } else if (type === "recherche_genre") {
+        // 2. Recherche par genre
+        var nomGenre = motCle.charAt(0).toUpperCase() + motCle.slice(1).toLowerCase();
+        query = [
+            "query ($genre: String, $perPage: Int) {",
+            "  Page(perPage: $perPage) {",
+            "    media(genre: $genre, type: ANIME, sort: SCORE_DESC) {",
+            "      id title { romaji english native }",
+            "      coverImage { large }",
+            "      genres episodes averageScore popularity",
+            "      season seasonYear",
+            "      description(asHtml: false)",
+            "      siteUrl",
+            "    }",
+            "  }",
+            "}"
+        ].join("\n");
+        variables = { genre: nomGenre, perPage: 10 };
+
+    } else if (type === "recherche_saison") {
+        // 3. Recherche par saison
+        var saison = selectSaison.value.toUpperCase(); // WINTER, SPRING, SUMMER, FALL
+        var annee  = parseInt(selectAnnee.value, 10);
+        query = [
+            "query ($season: MediaSeason, $seasonYear: Int, $perPage: Int) {",
+            "  Page(perPage: $perPage) {",
+            "    media(season: $season, seasonYear: $seasonYear, type: ANIME, sort: POPULARITY_DESC) {",
+            "      id title { romaji english native }",
+            "      coverImage { large }",
+            "      genres episodes averageScore popularity",
+            "      season seasonYear",
+            "      description(asHtml: false)",
+            "      siteUrl",
+            "    }",
+            "  }",
+            "}"
+        ].join("\n");
+        variables = { season: saison, seasonYear: annee, perPage: 10 };
+
+    } else {
         return;
     }
 
-    console.log("URL :", url);
-    xhr.open('GET', url);
-    xhr.setRequestHeader('x-rapidapi-key', '8bdf5aefc5msh5cdc0842b82656dp1e3d36jsnd56ae71fa5af');
-    xhr.setRequestHeader('x-rapidapi-host', 'anime-db.p.rapidapi.com');
+    envoyerRequete(query, variables);
+}
 
-    xhr.send();
+function envoyerRequete(query, variables) {
+    var xhr = new XMLHttpRequest();
+    xhr.timeout = 30000;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState !== this.DONE) return;
+
+        if (this.status === 0) {
+            afficherMessage("Connexion impossible. Verifiez votre connexion internet.");
+            return;
+        }
+
+        if (this.status === 429) {
+            afficherChargement();
+            setTimeout(function () { envoyerRequete(query, variables); }, 1000);
+            return;
+        }
+
+        if (this.status < 200 || this.status >= 300) {
+            afficherMessage("Erreur reseau (" + this.status + "). Veuillez reessayer.");
+            return;
+        }
+
+        var data;
+        try {
+            data = JSON.parse(this.responseText);
+        } catch (e) {
+            afficherMessage("Reponse inattendue du serveur.");
+            return;
+        }
+
+        if (data.errors) {
+            var msg = data.errors.map(function (e) { return e.message; }).join(" / ");
+            afficherMessage("Erreur API : " + echapper(msg));
+            return;
+        }
+
+        afficherResultats(data.data.Page.media);
+    });
+
+    xhr.addEventListener("timeout", function () {
+        afficherMessage("La requete a expire (30 s). Verifiez votre connexion.");
+    });
+
+    xhr.addEventListener("error", function () {
+        afficherMessage("Erreur reseau. Verifiez votre connexion.");
+    });
+
+    xhr.open("POST", ANILIST_URL);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.send(JSON.stringify({ query: query, variables: variables }));
+}
+
+// ============================================================
+//  Affichage
+// ============================================================
+
+function afficherChargement() {
+    conteneurRes.innerHTML =
+        '<div class="chargement" role="status">' +
+        '<span class="spinner" aria-hidden="true"></span>Chargement...' +
+        '</div>';
 }
 
 function afficherMessage(message) {
-    const conteneur = document.getElementById("resultats");
-    conteneur.innerHTML = `<p>${message}</p>`;
+    conteneurRes.innerHTML = "<p>" + message + "</p>";
 }
 
-function afficherResultats(resultat) {
-    const conteneur = document.getElementById("resultats");
-    conteneur.innerHTML = "";
+function echapper(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
 
-    if (!resultat || !resultat.data || resultat.data.length === 0) {
-        afficherMessage("Aucun anime trouvé.");
+function afficherResultats(animes) {
+    conteneurRes.innerHTML = "";
+
+    if (!animes || animes.length === 0) {
+        afficherMessage("Aucun anime trouve.");
         return;
     }
 
-    resultat.data.forEach(anime => {
-        const card = document.createElement("div");
+    animes.forEach(function (anime) {
+        var card = document.createElement("div");
         card.className = "card";
 
-        const genres = Array.isArray(anime.genres) ? anime.genres.join(", ") : anime.genres;
+        // Titre : anglais en priorite, sinon romaji, sinon natif
+        var titre    = anime.title.english || anime.title.romaji || anime.title.native || "Titre inconnu";
+        var image    = (anime.coverImage && anime.coverImage.large) ? anime.coverImage.large : "";
+        var genres   = (anime.genres || []).join(", ") || "—";
+        var episodes = (anime.episodes !== null && anime.episodes !== undefined) ? anime.episodes : "?";
+        var score    = anime.averageScore ? (anime.averageScore / 10).toFixed(1) + " / 10" : "N/A";
+        var saison   = anime.season ? (anime.season.charAt(0) + anime.season.slice(1).toLowerCase()) : "";
+        var annee    = anime.seasonYear ? anime.seasonYear : "";
+        var diffusion = (saison && annee) ? saison + " " + annee : annee || saison || "—";
 
-        card.innerHTML = `
-            <img src="${anime.image}" alt="${anime.title}" width="115" height="170" loading="lazy">
-            <h2>${anime.title}</h2>
-            <p><strong>Genres :</strong> ${genres}</p>
-            <p><strong>Épisodes :</strong> ${anime.episodes || "Inconnu"}</p>
-            <p><strong>Rang :</strong> ${anime.ranking || "N/A"}</p>
-            <p><strong>Synopsis :</strong> ${anime.synopsis || "Aucun synopsis disponible."}</p>
-            ${anime.link ? `<a href="${anime.link}" target="_blank" rel="noopener noreferrer">Voir sur MyAnimeList</a>` : ""}
-        `;
+        // Nettoyer le synopsis (l'API peut renvoyer des \n en excès)
+        var synopsis = (anime.description || "Aucun synopsis disponible.")
+            .replace(/\n{2,}/g, " ")
+            .trim();
+        var lien     = anime.siteUrl || "";
 
-        conteneur.appendChild(card);
+        var imgHTML = image
+            ? '<img src="' + image + '" alt="' + echapper(titre) + '" width="115" height="170" loading="lazy">'
+            : '<div class="no-img" aria-hidden="true"></div>';
+
+        var lienHTML = lien
+            ? '<a href="' + lien + '" target="_blank" rel="noopener noreferrer">Voir sur AniList</a>'
+            : "";
+
+        card.innerHTML =
+            imgHTML +
+            "<h2>" + echapper(titre)                + "</h2>" +
+            "<p><strong>Genres :</strong> "          + echapper(genres)           + "</p>" +
+            "<p><strong>Episodes :</strong> "        + echapper(String(episodes)) + "</p>" +
+            "<p><strong>Score :</strong> "           + echapper(score)            + "</p>" +
+            "<p><strong>Diffusion :</strong> "       + echapper(diffusion)        + "</p>" +
+            "<p><strong>Synopsis :</strong> "        + echapper(synopsis)         + "</p>" +
+            lienHTML;
+
+        conteneurRes.appendChild(card);
     });
 }
